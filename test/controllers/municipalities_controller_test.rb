@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MunicipalitiesControllerTest < ActionController::TestCase
   setup do
-    @municipality = municipalities(:one)
+    @municipality = municipalities(:aomori)
   end
 
   test "should get index" do
