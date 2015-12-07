@@ -1,14 +1,14 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Code:</strong>
+  <strong><%= Municipality.human_attribute_name(:code) %>:</strong>
   <%= @municipality.code %>
 </p>
 
 <p>
-  <strong>Name:</strong>
+  <strong><%= Municipality.human_attribute_name(:name) %>:</strong>
   <%= @municipality.name %>
 </p>
 
-<%= link_to 'Edit', edit_municipality_path(@municipality) %> |
-<%= link_to 'Back', municipalities_path %>
+<%= link_to '編集', edit_municipality_path(@municipality) %> |
+<%= link_to '戻る', municipalities_path %>

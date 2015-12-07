@@ -1,0 +1,21 @@
+ja:
+  activerecord:
+    models:
+      municipality: '市町村'
+    attributes:
+      municipality:
+        code: '全国地方公共団体コード'
+        name: '名前'
+    successful:
+      messages:
+        created: "%{model}を保存しました。"
+        destroyed: "%{model}を削除しました。"
+        updated: "%{model}を更新しました。"
+    errors:
+      template:
+        header:
+          other: "%{model}に%{count}つのエラーが発生しました。"
+  errors:
+    messages:
+      expired_at_too_old: "は現時刻より新しい日時にしてください。"
+      not_saved: "エラー"

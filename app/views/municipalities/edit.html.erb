@@ -1,6 +1,9 @@
-<h1>Editing Municipality</h1>
+<% provide(:title, "市町村の編集") %>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
+</div>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @municipality %> |
-<%= link_to 'Back', municipalities_path %>
+<%= link_to '詳細表示', @municipality %> |
+<%= link_to '戻る', municipalities_path %>
