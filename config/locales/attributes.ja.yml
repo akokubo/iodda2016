@@ -2,10 +2,14 @@ ja:
   activerecord:
     models:
       municipality: '市町村'
+      dataset: 'データセット'
     attributes:
       municipality:
         code: '全国地方公共団体コード'
         name: '名前'
+      dataset:
+        name: '名前'
+        file: 'CSVファイル'
     successful:
       messages:
         created: "%{model}を保存しました。"

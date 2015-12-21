@@ -5,3 +5,8 @@ population:
 
 work_force:
   name: 推計就業者数
+
+<% 30.times do |n| %>
+dataset_<%= n%>:
+  name: <%= "データセット #{n}" %>
+<% end %>
