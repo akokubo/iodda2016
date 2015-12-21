@@ -18,7 +18,7 @@ class MunicipalitiesControllerTest < ActionController::TestCase
 
   test "should create municipality" do
     assert_difference('Municipality.count') do
-      post :create, municipality: { code: @municipality.code, name: @municipality.name }
+      post :create, municipality: { code: "022039", name: "八戸" }
     end
 
     assert_redirected_to municipality_path(assigns(:municipality))
