@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203064722) do
+ActiveRecord::Schema.define(version: 20151221050458) do
+
+  create_table "datasets", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "municipalities", force: :cascade do |t|
     t.string   "code"
