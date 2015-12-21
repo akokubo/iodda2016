@@ -21,6 +21,12 @@ class DatasetsController < ApplicationController
     end
   end
 
+  def destroy
+    Dataset.find(params[:id]).destroy
+    flash[:success] = "データセットを削除しました。"
+    redirect_to datasets_url
+  end
+
   private
     def dataset_params
       params.require(:dataset).permit(:name, :file)
