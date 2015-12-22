@@ -16,7 +16,7 @@ class DatasetTest < ActiveSupport::TestCase
 
   test "associated data should be destroyed" do
     @dataset.save
-    @municipality = Municipality.create!(code: "022012", name: "青森")
+    @municipality = Municipality.create!(code: "022012", name: "青森", lat: 40.822222, lng: 140.7475)
     @dataset.data.create!(value: 2509, municipality_id: @municipality.id)
     assert_difference 'Datum.count', -1 do
       @dataset.destroy

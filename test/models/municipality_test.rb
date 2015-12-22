@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MunicipalityTest < ActiveSupport::TestCase
   def setup
-    @municipality = Municipality.new(code: "022039", name: "八戸市")
+    @municipality = Municipality.new(code: "022039", name: "八戸市", lat: 40.512222, lng: 141.488333)
   end
 
   test "should be valid" do

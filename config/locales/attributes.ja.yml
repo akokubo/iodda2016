@@ -7,6 +7,8 @@ ja:
       municipality:
         code: '全国地方公共団体コード'
         name: '名前'
+        lat: '緯度'
+        lng: '経度'
       dataset:
         name: '名前'
         file: 'CSVファイル'

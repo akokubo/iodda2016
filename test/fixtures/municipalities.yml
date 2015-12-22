@@ -3,7 +3,11 @@
 aomori:
   code: 022012
   name: 青森市
+  lat: 40.822222
+  lng: 140.7475
 
 hirosaki:
   code: 22021
   name: 弘前市
+  lat: 40.603056
+  lng: 140.464167

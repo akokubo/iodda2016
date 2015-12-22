@@ -23,6 +23,23 @@ function initMap() {
 
     // マップの表示領域を調整
     map.fitBounds(prefectural.bounds);
+
+    $.getJSON("/municipalities.json", function (municipalities) {
+        var i;
+        for (i = 0; i < municipalities.length; i += 1) {
+            createMarker(map, municipalities[i]);
+        }
+    });
+}
+
+// マーカーを生成
+function createMarker(map, municipality) {
+    title = municipality.name;
+    position = {
+        lat: municipality.lat,
+        lng: municipality.lng
+    };
+    new google.maps.Marker({position: position, map: map, title: title});
 }
 
 // マップ表示領域の高さを画面に合わせる

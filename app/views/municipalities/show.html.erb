@@ -10,5 +10,15 @@
   <%= @municipality.name %>
 </p>
 
+<p>
+  <strong><%= Municipality.human_attribute_name(:lat) %>:</strong>
+  <%= @municipality.lat %>
+</p>
+
+<p>
+  <strong><%= Municipality.human_attribute_name(:lng) %>:</strong>
+  <%= @municipality.lng %>
+</p>
+
 <%= link_to '編集', edit_municipality_path(@municipality) %> |
 <%= link_to '戻る', municipalities_path %>

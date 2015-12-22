@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221145005) do
+ActiveRecord::Schema.define(version: 20151222080627) do
 
   create_table "data", force: :cascade do |t|
     t.integer  "dataset_id"
@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 20151221145005) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float    "lat"
+    t.float    "lng"
   end
 
 end
