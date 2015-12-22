@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221050458) do
+ActiveRecord::Schema.define(version: 20151221145005) do
+
+  create_table "data", force: :cascade do |t|
+    t.integer  "dataset_id"
+    t.integer  "municipality_id"
+    t.float    "value"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "data", ["dataset_id", "municipality_id"], name: "index_data_on_dataset_id_and_municipality_id"
+  add_index "data", ["dataset_id"], name: "index_data_on_dataset_id"
+  add_index "data", ["municipality_id"], name: "index_data_on_municipality_id"
 
   create_table "datasets", force: :cascade do |t|
     t.string   "name"

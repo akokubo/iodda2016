@@ -5,6 +5,7 @@ class DatasetsController < ApplicationController
 
   def show
     @dataset = Dataset.find(params[:id])
+    @data = @dataset.data
   end
 
   def new

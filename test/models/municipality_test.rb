@@ -32,4 +32,13 @@ class MunicipalityTest < ActiveSupport::TestCase
     @municipality.save
     assert_not duplicate_municipality.valid?
   end
+
+  test "associated data should be destroyed" do
+    @municipality.save
+    @dataset = Dataset.create!(name: "1人当たり所得")
+    @municipality.data.create!(value: 2509, dataset_id: @dataset.id)
+    assert_difference 'Datum.count', -1 do
+      @municipality.destroy
+    end
+  end
 end

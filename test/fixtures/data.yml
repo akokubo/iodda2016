@@ -1,0 +1,10 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+aomomori:
+  value: 295683
+
+hirosaki:
+  value: 181275
+
+hachinohe:
+  value: 235562

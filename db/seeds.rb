@@ -34,3 +34,5 @@ def program_import(program_name)
 end
 
 csv_import('municipalities')
+csv_import('datasets')
+csv_import('data')

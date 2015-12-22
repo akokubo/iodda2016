@@ -10,6 +10,10 @@ ja:
       dataset:
         name: '名前'
         file: 'CSVファイル'
+      datum:
+        dataset: 'データセット'
+        municipality: '市町村'
+        value: '値'
     successful:
       messages:
         created: "%{model}を保存しました。"
