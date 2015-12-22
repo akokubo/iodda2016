@@ -1,0 +1,14 @@
+<% provide(:title, "マップ表示") %>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
+</div>
+
+<div class="row">
+  <!-- マップ領域 -->
+  <div id="map" class="col-md-8"></div>
+  <!-- 説明領域 -->
+  <%= render 'map_description' %>
+</div>
+
+<script src="/assets/iodd2016.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>

@@ -22,4 +22,10 @@ class StaticPagesControllerTest < ActionController::TestCase
     assert_response :success
     assert_select "title", "アプリについて | #{@base_title}"
   end
+
+  test "should get map" do
+    get :map
+    assert_response :success
+    assert_select "title", "マップ表示 | #{@base_title}"
+  end
 end
