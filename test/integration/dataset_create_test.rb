@@ -15,7 +15,8 @@ class DatasetCreateTest < ActionDispatch::IntegrationTest
     get new_dataset_path
     assert_difference 'Dataset.count', 1 do
       post_via_redirect datasets_path, dataset: {
-        name: "1人当たり所得"
+        name: "1人当たり所得",
+        file: fixture_file_upload('/csv/work_force_2012.csv', 'text/comma-separated-values')
       }
     end
     assert_template 'datasets/show'

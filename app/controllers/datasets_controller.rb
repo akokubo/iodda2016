@@ -15,6 +15,7 @@ class DatasetsController < ApplicationController
   def create
     @dataset = Dataset.new(dataset_params)
     if @dataset.save
+      Datum.import(@dataset)
       flash[:success] = "データセットを登録しました。"
       redirect_to @dataset
     else
