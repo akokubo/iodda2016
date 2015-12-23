@@ -1,13 +1,51 @@
 /*jslint browser:true, devel:true */
-/*global google, $ */
+/*global google, $, window */
 
+// マップ表示領域の高さを画面に合わせる
+function fitMapAreaToWindow() {
+    'use strict';
+    var mapElement, mapElementTop, footerTop, debugDumpHeight, mapElementHeight;
+
+    mapElement = $("#map");
+    mapElementTop = mapElement.offset().top;
+    footerTop = $("#footer").offset().top;
+    debugDumpHeight = $(".debug_dump").outerHeight(true);
+    mapElementHeight = footerTop - mapElementTop - debugDumpHeight - 45;
+    mapElement.height(mapElementHeight);
+}
+
+// マーカーを生成
+function createMarker(map, data) {
+    'use strict';
+    var title, position, value, icon, marker;
+
+    title = data.municipality;
+    position = {
+        lat: data.lat,
+        lng: data.lng
+    };
+    value = data.value / 300000 * 50;
+    icon = {
+        path: 'M 5,' + (-1 * value) + ' v ' + value + ' a 5 3 0 0 1 -10,0 v ' + (-1 * value) + ' M 5,' + (-1 * value) + ' a 5 3 0 0 1 -10,0 a 5 3 180 0 1 10,0',
+        fillColor: 'red',
+        fillOpacity: 0.8,
+        scale: 1,
+        strokeColor: 'black',
+        strokeWeight: 1
+    };
+
+    marker = new google.maps.Marker({map: map, position: position, icon: icon, title: title});
+    return marker;
+}
+
+// Googleマップのライブラリの読み込み終了後に実行する内容
 function initMap() {
     'use strict';
+    var map, mapElement, prefectural = {};
 
-    var mapElement = $("#map");
-    var map;
-    var prefectural = {};
+    mapElement = $("#map");
 
+    // マップの表示領域をリサイズする
     fitMapAreaToWindow();
 
     // 県庁所在地
@@ -21,37 +59,22 @@ function initMap() {
         zoom: 8
     });
 
-    // マップの表示領域を調整
+    // マップの中心やズームを表示内容に合わせる
     map.fitBounds(prefectural.bounds);
 
-    $.getJSON("/municipalities.json", function (municipalities) {
-        var i;
-        for (i = 0; i < municipalities.length; i += 1) {
-            createMarker(map, municipalities[i]);
+    // データを読んでマーカーを表示
+    $.getJSON("/datasets/1.json", function (dataset) {
+        var i = 0;
+        while (i < dataset.data.length) {
+            createMarker(map, dataset.data[i]);
+            i = i + 1;
         }
     });
 }
 
-// マーカーを生成
-function createMarker(map, municipality) {
-    title = municipality.name;
-    position = {
-        lat: municipality.lat,
-        lng: municipality.lng
-    };
-    new google.maps.Marker({position: position, map: map, title: title});
-}
-
-// マップ表示領域の高さを画面に合わせる
-function fitMapAreaToWindow() {
-    var mapElement = $("#map");
-    var mapElementTop = mapElement.offset().top;
-    var footerTop = $("#footer").offset().top;
-    var debugDumpHeight = $(".debug_dump").outerHeight(true);
-    var mapElementHeight = footerTop - mapElementTop - debugDumpHeight - 45;
-    mapElement.height(mapElementHeight);
-}
-
 $(document).ready(function () {
-    $(window).on('resize', fitMapAreaToWindow)
+    'use strict';
+
+    // ウィンドウサイズが変更された場合にマップの表示領域をリサイズする
+    $(window).on('resize', fitMapAreaToWindow);
 });
