@@ -1,6 +1,8 @@
 /*jslint browser:true, devel:true */
 /*global google, $, window */
 
+var datasets = [];
+
 // マップ表示領域の高さを画面に合わせる
 function fitMapAreaToWindow() {
     'use strict';
@@ -15,9 +17,9 @@ function fitMapAreaToWindow() {
 }
 
 // マーカーを生成
-function createMarker(map, data) {
+function createMarker(map, data, align) {
     'use strict';
-    var title, position, value, icon, marker;
+    var title, color, origin, value, icon, marker, position;
 
     title = data.municipality;
     position = {
@@ -25,9 +27,21 @@ function createMarker(map, data) {
         lng: data.lng
     };
     value = data.value / 300000 * 50;
+
+    if (align === 'left') {
+        color = 'red';
+        origin = -5;
+    } else if (align === 'right') {
+        color = 'yellow';
+        origin = 5;
+    } else {
+        color = 'blue';
+        origin = 0;
+    }
+
     icon = {
-        path: 'M 5,' + (-1 * value) + ' v ' + value + ' a 5 3 0 0 1 -10,0 v ' + (-1 * value) + ' M 5,' + (-1 * value) + ' a 5 3 0 0 1 -10,0 a 5 3 180 0 1 10,0',
-        fillColor: 'red',
+        path: 'M ' + origin + ',' + (-1 * value) + ' v ' + value + ' a 5 3 0 0 1 -10,0 v ' + (-1 * value) + 'M ' + origin + ',' + (-1 * value) + ' a 5 3 0 0 1 -10,0 a 5 3 180 0 1 10,0',
+        fillColor: color,
         fillOpacity: 0.8,
         scale: 1,
         strokeColor: 'black',
@@ -36,6 +50,32 @@ function createMarker(map, data) {
 
     marker = new google.maps.Marker({map: map, position: position, icon: icon, title: title});
     return marker;
+}
+
+// データセットを非表示
+function hideDataset(align) {
+    'use strict';
+
+    if (datasets[align]) {
+        datasets[align].markers.forEach(function (marker) {
+            marker.setMap(null);
+        });
+    }
+}
+
+// データセットを表示する
+function displayDataset(map, datasetId, align) {
+    'use strict';
+    var marker, markers = [];
+
+    // データを読んでマーカーを表示
+    $.getJSON("/datasets/" + datasetId + ".json", function (dataset) {
+        dataset.data.forEach(function (data) {
+            marker = createMarker(map, data, align);
+            markers.push(marker);
+        });
+    });
+    datasets[align] = {datasetId: datasetId, markers: markers};
 }
 
 // Googleマップのライブラリの読み込み終了後に実行する内容
@@ -62,13 +102,34 @@ function initMap() {
     // マップの中心やズームを表示内容に合わせる
     map.fitBounds(prefectural.bounds);
 
-    // データを読んでマーカーを表示
-    $.getJSON("/datasets/1.json", function (dataset) {
-        var i = 0;
-        while (i < dataset.data.length) {
-            createMarker(map, dataset.data[i]);
-            i = i + 1;
-        }
+    // データセットを読んで一覧を表示
+    $.getJSON("/datasets.json", function (jsonArray) {
+
+        jsonArray.forEach(function (json) {
+            $("#dataset_select_0").append('<option value="' + json.id + '">' + json.name + '</option>');
+            $("#dataset_select_1").append('<option value="' + json.id + '">' + json.name + '</option>');
+        });
+
+        $("#dataset_select_0").on('change', function () {
+            var id_0 = $("[name=dataset_select_0]").val();
+            $("#dataset_select_1 option").prop("disabled", false);
+            hideDataset('left');
+            if (id_0 !== "") {
+                $("#dataset_select_1 option[value=" + id_0 + "]").prop("disabled", true);
+                displayDataset(map, id_0, 'left');
+            }
+        });
+
+        $("#dataset_select_1").on('change', function () {
+            var id_1 = $("[name=dataset_select_1]").val();
+            $("#dataset_select_0 option").prop("disabled", false);
+            hideDataset('right');
+            if (id_1 !== "") {
+                $("#dataset_select_0 option[value=" + id_1 + "]").prop("disabled", true);
+                displayDataset(map, id_1, 'right');
+            }
+        });
+
     });
 }
 
