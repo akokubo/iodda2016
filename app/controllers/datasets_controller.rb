@@ -8,6 +8,11 @@ class DatasetsController < ApplicationController
     @data = @dataset.data
   end
 
+  def visualize
+    @dataset = Dataset.find(params[:id])
+    @data = @dataset.data
+  end
+
   def new
     @dataset = Dataset.new
   end

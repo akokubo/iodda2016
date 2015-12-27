@@ -3,6 +3,8 @@
   <h1><%= yield(:title) %></h1>
 </div>
 
+<%= link_to '視覚化', visualize_dataset_path(@dataset), class: 'btn btn-primary' %>
+
 <table class="table table-striped table-bordered table-hover">
   <thead>
     <th><%= Datum.human_attribute_name(:municipality) %></th>

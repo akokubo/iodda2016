@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   get 'map' => 'static_pages#map'
 
   resources :municipalities
-  resources :datasets
+  resources :datasets do
+    member do
+      get 'visualize'
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
