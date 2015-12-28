@@ -1,6 +1,7 @@
 /*jslint browser:true, devel:true */
 /*global google, $, Flotr, window */
 
+var map;
 var datasets = [];
 var displayGoogleMap = true;
 
@@ -11,15 +12,20 @@ function fitMapAreaToWindow() {
     var mapElement, mapElementTop, footerTop, debugDumpHeight, mapElementHeight;
 
     mapElement = $("#map");
+
+    // 各要素の高さを求める
     mapElementTop = mapElement.offset().top;
     footerTop = $("#footer").offset().top;
     debugDumpHeight = $(".debug_dump").outerHeight(true);
+
+    // マップ要素の高さを計算する
     mapElementHeight = footerTop - mapElementTop - debugDumpHeight - 45;
+    // マップ要素の高さを設定する
     mapElement.height(mapElementHeight);
 }
 
 // マーカーを生成
-function createMarker(map, data, align) {
+function createMarker(data, align) {
     'use strict';
 
     var title, color, origin, value, icon, marker, position;
@@ -55,6 +61,7 @@ function createMarker(map, data, align) {
     return marker;
 }
 
+// 全マーカーを削除
 function removeMarkers(align) {
     'use strict';
 
@@ -75,8 +82,8 @@ function hideDataset(align) {
     }
 }
 
-// データセットを表示する
-function displayDataset(map, datasetId, align) {
+// データセットを表示
+function showDataset(datasetId, align) {
     'use strict';
 
     var marker, markers = [];
@@ -85,7 +92,7 @@ function displayDataset(map, datasetId, align) {
     $.getJSON("/datasets/" + datasetId + ".json", function (dataset) {
         if (displayGoogleMap === true) {
             dataset.data.forEach(function (data) {
-                marker = createMarker(map, data, align);
+                marker = createMarker(data, align);
                 markers.push(marker);
             });
         }
@@ -93,21 +100,21 @@ function displayDataset(map, datasetId, align) {
         datasets[align] = {datasetId: datasetId, name: dataset.dataset, data: dataset.data, markers: markers};
 
         if (datasets.left && datasets.right) {
-            $("#displayScatterChart").prop("disabled", false);
+            $("#display-correlation").prop("disabled", false);
         }
     });
 }
 
-// 散布図データの整形
-function formatData(datasetX, datasetY) {
+function formatScatterData(datasetX, datasetY) {
     'use strict';
 
-    var scatterData, dataX, dataY, dataXY, i;
-    scatterData = [];
-    dataXY = [];
-    dataX = datasetX.data;
-    dataY = datasetY.data;
+    var scatterData = [],
+        dataXY = [],
+        dataX = datasetX.data,
+        dataY = datasetY.data,
+        i;
 
+    // データの整形
     dataX.forEach(function (datum) {
         i = 0;
         while (i < dataY.length) {
@@ -121,6 +128,7 @@ function formatData(datasetX, datasetY) {
     dataXY.forEach(function (datum) {
         scatterData.push([datum.x, datum.y]);
     });
+
     return scatterData;
 }
 
@@ -128,23 +136,43 @@ function formatData(datasetX, datasetY) {
 function drawScatter(scatterData) {
     'use strict';
 
+    // 散布図の描画
     Flotr.draw(
         $("#scatter-chart")[0],
-        [{data: scatterData, points: {show: true}}]
+        [{
+            data: scatterData,
+            points: {show: true}
+        }],
+        {
+            title: "散布図",
+            subtitle: "",
+            xaxis: {
+                title: datasets.left.name
+            },
+            yaxis: {
+                title: datasets.right.name
+            },
+            mouse: {
+                track: true,
+                relative: true
+            }
+        }
     );
+    $(".flotr-dummy-div").parent().hide();
 }
 
 function calcCorrelationCoefficient(scatterData) {
     'use strict';
 
-    var averageX, averageY, averageSquareX, averageSquareY, averageXY, length, i;
+    var averageX = 0,
+        averageY = 0,
+        averageSquareX = 0,
+        averageSquareY = 0,
+        averageXY = 0,
+        i,
+        length;
 
-    averageX = 0;
-    averageY = 0;
-    averageSquareX = 0;
-    averageSquareY = 0;
-    averageXY = 0;
-
+    // それぞれの平均を求める
     i = 0;
     length = scatterData.length;
     while (i < length) {
@@ -155,6 +183,7 @@ function calcCorrelationCoefficient(scatterData) {
         averageXY += scatterData[i][0] * scatterData[i][1];
         i += 1;
     }
+
     averageX /= length;
     averageY /= length;
     averageSquareX /= length;
@@ -164,17 +193,24 @@ function calcCorrelationCoefficient(scatterData) {
     return (averageXY - averageX * averageY) / Math.sqrt((averageSquareX - averageX * averageX) * (averageSquareY - averageY * averageY));
 }
 
-// 散布図の生成
-function createScatterChart() {
+// 2つのデータの比較を表示
+function showCorrelation() {
     'use strict';
 
     var scatterData, correlationCoefficient, msg;
-    scatterData = formatData(datasets.left, datasets.right);
+
+    // データの整形
+    scatterData = formatScatterData(datasets.left, datasets.right);
+    // 相関係数の計算
     correlationCoefficient = calcCorrelationCoefficient(scatterData);
+
+    // 表示メッセージの生成
     msg = '<p>x軸: ' + datasets.left.name + '<br>';
     msg += 'y軸: ' + datasets.right.name + '<br>';
     msg += '相関係数: ' + correlationCoefficient + '</p>';
     $("#correlation-coefficient").html(msg);
+
+    // 散布図の描画
     drawScatter(scatterData);
 }
 
@@ -182,7 +218,7 @@ function createScatterChart() {
 function initMap() {
     'use strict';
 
-    var map, mapElement, prefectural = {};
+    var mapElement, prefectural = {};
 
     mapElement = $("#map");
 
@@ -204,41 +240,67 @@ function initMap() {
         // マップの中心やズームを表示内容に合わせる
         map.fitBounds(prefectural.bounds);
     }
+}
 
-    $("#displayScatterChart").prop("disabled", true);
+// データセット比較の初期化
+function initCorrelation() {
+    'use strict';
+
+    // 「2つのデータを比較」ボタンを無効化
+    $("#display-correlation").prop("disabled", true);
 
     // データセットを読んで一覧を表示
     $.getJSON("/datasets.json", function (jsonArray) {
-
+        // データセット選択エリアの設定
         jsonArray.forEach(function (json) {
-            $("#dataset_select_0").append('<option value="' + json.id + '">' + json.name + '</option>');
-            $("#dataset_select_1").append('<option value="' + json.id + '">' + json.name + '</option>');
+            $("#dataset-select-left").append('<option value="' + json.id + '">' + json.name + '</option>');
+            $("#dataset-select-right").append('<option value="' + json.id + '">' + json.name + '</option>');
         });
 
-        $("#dataset_select_0").on('change', function () {
-            var id_0 = $("[name=dataset_select_0]").val();
-            $("#displayScatterChart").prop("disabled", true);
-            $("#dataset_select_1 option").prop("disabled", false);
+        // データセット左のイベントハンドラ
+        $("#dataset-select-left").on('change', function () {
+            var id;
+            // 既存のデータセット左を削除
             hideDataset('left');
-            if (id_0 !== "") {
-                $("#dataset_select_1 option[value=" + id_0 + "]").prop("disabled", true);
-                displayDataset(map, id_0, 'left');
+            // 「2つのデータを比較」ボタンを無効化
+            $("#display-correlation").prop("disabled", true);
+            // データセット右のオプションをすべて有効化
+            $("#dataset-select-right option").prop("disabled", false);
+
+            // データセット左に入っているデータのidを取得
+            id = $("[name=dataset-select-left]").val();
+            if (id !== "") {
+                // データセット左に入っているidと同じデータセット右のオプションを無効化
+                $("#dataset-select-right option[value=" + id + "]").prop("disabled", true);
+                // マップにデータセット左を表示
+                showDataset(id, 'left');
             }
         });
 
-        $("#dataset_select_1").on('change', function () {
-            var id_1 = $("[name=dataset_select_1]").val();
-            $("#displayScatterChart").prop("disabled", true);
-            $("#dataset_select_0 option").prop("disabled", false);
+        // データセット右のイベントハンドラ
+        $("#dataset-select-right").on('change', function () {
+            var id;
+            // 既存のデータセット右を削除
             hideDataset('right');
-            if (id_1 !== "") {
-                $("#dataset_select_0 option[value=" + id_1 + "]").prop("disabled", true);
-                displayDataset(map, id_1, 'right');
+            // 「2つのデータを比較」ボタンを無効化
+            $("#display-correlation").prop("disabled", true);
+            // データセット左のオプションをすべて有効化
+            $("#dataset-select-left option").prop("disabled", false);
+
+            // データセット右に入っているデータのidを取得
+            id = $("[name=dataset-select-right]").val();
+            if (id !== "") {
+                // データセット右に入っているidと同じデータセット右のオプションを無効化
+                $("#dataset-select-left option[value=" + id + "]").prop("disabled", true);
+                // マップにデータセット右を表示
+                showDataset(id, 'right');
             }
         });
 
-        $("#myModal").on("shown.bs.modal", function () {
-            createScatterChart();
+        // データセット比較モーダルの表示のイベントハンドラ
+        $("#correlation").on("shown.bs.modal", function () {
+            // 散布図の生成
+            showCorrelation();
         });
 
     });
@@ -250,7 +312,6 @@ $(document).ready(function () {
     // ウィンドウサイズが変更された場合にマップの表示領域をリサイズする
     $(window).on('resize', fitMapAreaToWindow);
 
-    if (displayGoogleMap === false) {
-        initMap();
-    }
+    // データセット比較の初期化
+    initCorrelation();
 });
