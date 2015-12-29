@@ -25,7 +25,7 @@ function fitMapAreaToWindow() {
 }
 
 // マーカーを生成
-function createMarker(data, align) {
+function createMarker(data, range, align) {
     'use strict';
 
     var title, color, origin, value, icon, marker, position;
@@ -35,7 +35,7 @@ function createMarker(data, align) {
         lat: data.lat,
         lng: data.lng
     };
-    value = data.value / 300000 * 50;
+    value = data.value / range.max * 50;
 
     if (align === 'left') {
         color = 'red';
@@ -82,6 +82,58 @@ function hideDataset(align) {
     }
 }
 
+// データの最小最大値からグラフの上限と下限を適当に計算
+function calcRange(data) {
+    'use strict';
+
+    var min, max, rangeMin, rangeMax, figure, mostSignificantDigit;
+
+    // 最小値
+    min = data.reduce(function (a, b) {
+        if (a < b) {
+            return a;
+        } else {
+            return b;
+        }
+    });
+
+    // 最大値
+    max = data.reduce(function (a, b) {
+        if (a > b) {
+            return a;
+        } else {
+            return b;
+        }
+    });
+
+    // 最大値から適当なグラフの上限を求める
+    if (max >= 0) {
+        // 桁数
+        figure = Math.ceil(Math.log10(max));
+        // 最上位桁の値
+        mostSignificantDigit = Math.floor(max / Math.pow(10, figure - 1));
+        rangeMax = (mostSignificantDigit + 1) * Math.pow(10, figure - 1);
+    } else {
+        // 桁数
+        figure = Math.ceil(Math.log10(-max));
+        // 最上位桁の値
+        mostSignificantDigit = Math.floor(-max / Math.pow(10, figure - 1));
+        rangeMax = -1 * (mostSignificantDigit - 1) * Math.pow(10, figure - 1);
+    }
+
+    if (min >= 0) {
+        rangeMin = 0;
+    } else {
+        // 桁数
+        figure = Math.ceil(Math.log10(-min));
+        // 最上位桁の値
+        mostSignificantDigit = Math.floor(-min / Math.pow(10, figure - 1));
+        rangeMin = -1 * (mostSignificantDigit + 1) * Math.pow(10, figure - 1);
+    }
+
+    return {min: rangeMin, max: rangeMax};
+}
+
 // データセットを表示
 function showDataset(datasetId, align) {
     'use strict';
@@ -90,9 +142,17 @@ function showDataset(datasetId, align) {
 
     // データを読んでマーカーを表示
     $.getJSON("/datasets/" + datasetId + ".json", function (dataset) {
+        var data, range;
         if (displayGoogleMap === true) {
+            // 数値データのみ取り出す
+            data = dataset.data.map(function (datum) {
+                return datum.value;
+            });
+
+            range = calcRange(data);
+
             dataset.data.forEach(function (data) {
-                marker = createMarker(data, align);
+                marker = createMarker(data, range, align);
                 markers.push(marker);
             });
         }

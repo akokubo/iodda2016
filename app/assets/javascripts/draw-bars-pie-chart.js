@@ -1,7 +1,6 @@
 /*jslint browser:true, devel:true */
 /*global $, Flotr */
 
-
 // 棒グラフの表示
 function drawBars(dataset) {
     'use strict';
