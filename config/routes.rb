@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :datasets do
     member do
       get 'visualize'
+      get 'd3_visualize'
     end
   end
 
