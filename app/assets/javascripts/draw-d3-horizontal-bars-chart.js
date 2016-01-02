@@ -1,12 +1,13 @@
 /*jslint browser:true, devel:true */
 /*global $, d3 */
 
-function drawD3HorizonatlBarsChart(dataset) {
+function drawD3HorizonatlBarsChart(targetElement, dataset) {
     'use strict';
 
     // グラフ表示領域のサイズ
     var w = 960;
     var h = 600;
+    var padding = 20;
 
     // フォントの大きさ
     var fontSize = 11;
@@ -21,15 +22,28 @@ function drawD3HorizonatlBarsChart(dataset) {
     // x軸のスケール
     var xScale = d3.scale.linear()
         .domain([0, valueMax])
-        .range([0, w - Math.log10(valueMax) * 11 - labelWidth]);
+        .range([padding, w - padding - Math.log10(valueMax) * 11 - labelWidth])
+        .nice();
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom");
+
+    // 塗りの色の設定(http://colorbrewer2.org/で生成)
+    var color = d3.scale.linear()
+        .domain([0, valueMax])
+        .nice()
+        .range(
+            ['rgb(224,243,219)', 'rgb(67,162,202)']
+        );
 
     // y軸のスケール
     var yScale = d3.scale.ordinal()
         .domain(d3.range(dataset.length))
-        .rangeRoundBands([0, h], 0.05);
+        .rangeRoundBands([padding, h - padding], 0.05);
 
     // SVG要素を作る
-    var svg = d3.select("#d3-horizontal-bars")
+    var svg = d3.select(targetElement)
         .append("svg")
         .attr("width", w)
         .attr("height", h);
@@ -49,15 +63,38 @@ function drawD3HorizonatlBarsChart(dataset) {
             })
             .attr("height", yScale.rangeBand())
             .attr("fill", function (d) {
-                var blue = Math.floor(d.value * 128 / valueMax + 127);
-                return "rgb(0, 0, " + blue + ")";
+                return color(d.value);
+                //var blue = Math.floor(d.value * 128 / valueMax + 127);
+                //return "rgb(0, 0, " + blue + ")";
             })
             .attr("transform", "translate(" + labelWidth + ", 0)");
     };
 
+    // スケールを表示する
+    var drawScale = function () {
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + (labelWidth - padding) + ", " + (h - padding * 2 + 2) + ")")
+            .call(xAxis);
+
+        svg.selectAll(targetElement + " .axis path")
+            .attr("fill", "none")
+            .attr("stroke", "black")
+            .attr("shape-rendering", "crispEdges");
+
+        svg.selectAll(targetElement + " .axis line")
+            .attr("fill", "none")
+            .attr("stroke", "black")
+            .attr("shape-rendering", "crispEdges");
+
+        svg.selectAll(targetElement + " .axis text")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "11px");
+    };
+
     // 棒グラフの右に値を表示する
     var drawValues = function () {
-        svg.selectAll("text.value")
+        svg.selectAll(targetElement + " text.value")
             .data(dataset)
             .enter()
             .append("text")
@@ -76,7 +113,7 @@ function drawD3HorizonatlBarsChart(dataset) {
 
     // 棒グラフにラベルを追加する
     var drawLabels = function () {
-        svg.selectAll("text.label")
+        svg.selectAll(targetElement + " text.label")
             .data(dataset)
             .enter()
             .append("text")
@@ -90,25 +127,14 @@ function drawD3HorizonatlBarsChart(dataset) {
             .attr("y", function (d, i) {
                 return yScale(i) + yScale.rangeBand() / 2 + 5;
             })
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "11px")
             .attr("text-anchor", "end")
             .attr("transform", "translate(" + (labelWidth - fontSize) + ", 0)");
     };
 
     drawBars();
+    drawScale();
     drawValues();
     drawLabels();
 }
-
-
-$(document).ready(function () {
-    'use strict';
-
-    // 取得するJSONのパス名を求める
-    var pathname = location.pathname;
-    var lastIndex = pathname.lastIndexOf("/");
-    var jsonPathname = pathname.substring(0, lastIndex) + ".json";
-
-    $.getJSON(jsonPathname, function (dataset) {
-        drawD3HorizonatlBarsChart(dataset.data);
-    });
-});

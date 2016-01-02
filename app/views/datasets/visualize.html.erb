@@ -2,22 +2,29 @@
 <div class="page-header">
   <h1>視覚化: <%= yield(:title) %></h1>
 </div>
-<div id="d3-GeoJSON" style="width:960px;height:600px;"></div>
+<div id="d3-google-maps-geojson-chart" style="width:960px;height:600px;"></div>
 <br>
 <br>
-<div id="d3-horizontal-bars" style="width:960px;height:600px;"></div>
+<div id="d3-geojson-chart" style="width:960px;height:600px;"></div>
 <br>
 <br>
-<div id="d3-pie" style="width:960px;height:800px;"></div>
+<div id="d3-horizontal-bars-chart" style="width:960px;height:600px;"></div>
 <br>
 <br>
-<div id="horizontal-bars" style="width:960px;height:800px;"></div>
+<div id="d3-pie-chart" style="width:960px;height:800px;"></div>
 <br>
 <br>
-<div id="pie" style="width:960px;height:800px;"></div>
+<div id="flotr2-horizontal-bars-chart" style="width:960px;height:800px;"></div>
+<br>
+<br>
+<div id="flotr2-pie-chart" style="width:960px;height:800px;"></div>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
 <script src="/assets/d3.min.js"></script>
+<script src="/assets/draw-d3-GoogleMaps-GeoJSON-chart.js"></script>
 <script src="/assets/draw-d3-GeoJSON-chart.js"></script>
-<script src="/assets/draw-d3-bars-chart.js"></script>
+<script src="/assets/draw-d3-horizontal-bars-chart.js"></script>
 <script src="/assets/draw-d3-pie-chart.js"></script>
+<script src="/assets/draw-flotr2-horizontal-bars-chart.js"></script>
+<script src="/assets/draw-flotr2-pie-chart.js"></script>
 <script src="/assets/flotr2.min.js"></script>
-<script src="/assets/draw-bars-pie-chart.js"></script>
+<script src="/assets/visualize.js"></script>
