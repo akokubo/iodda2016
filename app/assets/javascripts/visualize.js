@@ -19,6 +19,9 @@ $(document).ready(function () {
         // D3による円グラフの描画
         drawD3PieChart("#d3-pie-chart", dataset);
 
+        // D3によるGoogleマップへの棒グラフの描画
+        drawD3GoogleMapsBarsChart("#d3-google-maps-bars-chart", dataset);
+
         d3.json("/aomori-shape.geojson", function (geojson) {
             // D3によるGeoJSONの描画
             drawD3GeoJSONChart("#d3-geojson-chart", dataset, geojson);

@@ -1,4 +1,3 @@
-
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 @import "bootstrap-sprockets";
 @import "bootstrap";
@@ -98,8 +97,4 @@ input {
   .form-control {
     color: $state-danger-text;
   }
-}
-
-svg {
-  border: 1px solid black;
 }
