@@ -206,6 +206,8 @@ function drawScatter(scatterData) {
 
     var dataset = scatterData;
 
+    d3.selectAll("svg").remove();
+
     //Create SVG element
     var svg = d3.select("#scatter-chart")
         .append("svg")
@@ -451,6 +453,8 @@ function initCorrelation() {
 
 $(document).ready(function () {
     'use strict';
+
+    initMap();
 
     // ウィンドウサイズが変更された場合にマップの表示領域をリサイズする
     $(window).on('resize', fitMapAreaToWindow);
