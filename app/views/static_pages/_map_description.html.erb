@@ -20,7 +20,7 @@
 
   <!-- Modal -->
   <div class="modal fade" id="correlation" tabindex="-1" role="dialog" aria-labelledby="crrelation-label">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -28,7 +28,8 @@
         </div>
         <div class="modal-body">
           <div id="correlation-coefficient"></div>
-          <div id="scatter-chart" style="height:400px;"></div>
+          <div id="scatter-chart" style="height:500px;"></div>
+          <div id="tooltip" class="hidden"><p id="tooltip-text">市町村<br>x軸<br>y軸</p></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
@@ -36,7 +37,4 @@
       </div>
     </div>
   </div>
-
-  <script src="/assets/flotr2.min.js"></script>
-
 </div>

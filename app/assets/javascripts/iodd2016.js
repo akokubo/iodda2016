@@ -1,8 +1,9 @@
-/*jslint browser:true, devel:true */
-/*global google, $, Flotr, window */
+/*jslint browser:true, devel:true, this:true */
+/*global google, $, window, d3 */
 
 var map;
 var datasets = [];
+var maxBarHeight = 50;
 var displayGoogleMap = true;
 
 // マップ表示領域の高さを画面に合わせる
@@ -25,18 +26,24 @@ function fitMapAreaToWindow() {
 }
 
 // マーカーを生成
-function createMarker(data, range, align) {
+function createMarker(datum, yScale, align) {
     'use strict';
 
-    var title, color, origin, value, icon, marker, position;
+    var title, color, origin, barHeight, icon, marker, position, path, infoWindow;
 
-    title = data.municipality;
+    // タイトル
+    title = datum.municipality;
+
+    // マーカーの表示座標
     position = {
-        lat: data.lat,
-        lng: data.lng
+        lat: datum.lat,
+        lng: datum.lng
     };
-    value = data.value / range.max * 50;
 
+    // 棒グラフの高さ
+    barHeight = yScale(datum.value);
+
+    // マーカーの表示位置を左右にずらす
     if (align === 'left') {
         color = 'red';
         origin = -5;
@@ -48,8 +55,17 @@ function createMarker(data, range, align) {
         origin = 0;
     }
 
+    // 棒グラフの形状
+    path = 'M ' + origin + ',' + (-1 * barHeight)
+            + ' v ' + barHeight // 右の縦線
+            + ' a 5 3 0 0 1 -10,0' // 下の円弧
+            + ' v ' + (-1 * barHeight) // 左の縦線
+            + 'M ' + origin + ',' + (-1 * barHeight)
+            + ' a 5 3 0 0 1 -10,0 a 5 3 180 0 1 10,0'; // 上の楕円
+
+    // アイコンの設定
     icon = {
-        path: 'M ' + origin + ',' + (-1 * value) + ' v ' + value + ' a 5 3 0 0 1 -10,0 v ' + (-1 * value) + 'M ' + origin + ',' + (-1 * value) + ' a 5 3 0 0 1 -10,0 a 5 3 180 0 1 10,0',
+        path: path,
         fillColor: color,
         fillOpacity: 0.8,
         scale: 1,
@@ -57,7 +73,20 @@ function createMarker(data, range, align) {
         strokeWeight: 1
     };
 
+    // マーカーの生成
     marker = new google.maps.Marker({map: map, position: position, icon: icon, title: title});
+
+    // マーカーにつける情報ウィンドウ
+    infoWindow = new google.maps.InfoWindow({content: title + '<br>' + datum.value});
+
+    // マーカーのイベントリスナー
+    marker.addListener('mouseover', function () {
+        infoWindow.open(map, marker);
+    });
+    marker.addListener('mouseout', function () {
+        infoWindow.close();
+    });
+
     return marker;
 }
 
@@ -82,56 +111,33 @@ function hideDataset(align) {
     }
 }
 
-// データの最小最大値からグラフの上限と下限を適当に計算
-function calcRange(data) {
+function calcYScale(data) {
     'use strict';
 
-    var min, max, rangeMin, rangeMax, figure, mostSignificantDigit;
+    var min, max, yScale;
 
-    // 最小値
-    min = data.reduce(function (a, b) {
-        if (a < b) {
-            return a;
-        } else {
-            return b;
-        }
+    min = d3.min(data, function (d) {
+        return d.value;
     });
 
-    // 最大値
-    max = data.reduce(function (a, b) {
-        if (a > b) {
-            return a;
-        } else {
-            return b;
-        }
+    max = d3.max(data, function (d) {
+        return d.value;
     });
 
-    // 最大値から適当なグラフの上限を求める
-    if (max >= 0) {
-        // 桁数
-        figure = Math.ceil(Math.log10(max));
-        // 最上位桁の値
-        mostSignificantDigit = Math.floor(max / Math.pow(10, figure - 1));
-        rangeMax = (mostSignificantDigit + 1) * Math.pow(10, figure - 1);
-    } else {
-        // 桁数
-        figure = Math.ceil(Math.log10(-max));
-        // 最上位桁の値
-        mostSignificantDigit = Math.floor(-max / Math.pow(10, figure - 1));
-        rangeMax = -1 * (mostSignificantDigit - 1) * Math.pow(10, figure - 1);
+    if (min > 0) {
+        min = 0;
     }
 
-    if (min >= 0) {
-        rangeMin = 0;
-    } else {
-        // 桁数
-        figure = Math.ceil(Math.log10(-min));
-        // 最上位桁の値
-        mostSignificantDigit = Math.floor(-min / Math.pow(10, figure - 1));
-        rangeMin = -1 * (mostSignificantDigit + 1) * Math.pow(10, figure - 1);
+    if (max < 0) {
+        max = 0;
     }
 
-    return {min: rangeMin, max: rangeMax};
+    yScale = d3.scale.linear()
+        .domain([min, max])
+        .range([0, maxBarHeight])
+        .nice();
+
+    return yScale;
 }
 
 // データセットを表示
@@ -142,22 +148,20 @@ function showDataset(datasetId, align) {
 
     // データを読んでマーカーを表示
     $.getJSON("/datasets/" + datasetId + ".json", function (dataset) {
-        var data, range;
+        var data, yScale;
+
+        data = dataset.data;
+
+        yScale = calcYScale(data);
+
         if (displayGoogleMap === true) {
-            // 数値データのみ取り出す
-            data = dataset.data.map(function (datum) {
-                return datum.value;
-            });
-
-            range = calcRange(data);
-
-            dataset.data.forEach(function (data) {
-                marker = createMarker(data, range, align);
+            data.forEach(function (datum) {
+                marker = createMarker(datum, yScale, align);
                 markers.push(marker);
             });
         }
 
-        datasets[align] = {datasetId: datasetId, name: dataset.dataset, data: dataset.data, markers: markers};
+        datasets[align] = {datasetId: datasetId, name: dataset.dataset, data: data, markers: markers};
 
         if (datasets.left && datasets.right) {
             $("#display-correlation").prop("disabled", false);
@@ -168,8 +172,7 @@ function showDataset(datasetId, align) {
 function formatScatterData(datasetX, datasetY) {
     'use strict';
 
-    var scatterData = [],
-        dataXY = [],
+    var dataXY = [],
         dataX = datasetX.data,
         dataY = datasetY.data,
         i;
@@ -185,42 +188,127 @@ function formatScatterData(datasetX, datasetY) {
             i += 1;
         }
     });
-    dataXY.forEach(function (datum) {
-        scatterData.push([datum.x, datum.y]);
-    });
 
-    return scatterData;
+    return dataXY;
 }
 
-// 散布図の表示
 function drawScatter(scatterData) {
     'use strict';
 
-    // 散布図の描画
-    Flotr.draw(
-        $("#scatter-chart")[0],
-        [{
-            data: scatterData,
-            points: {show: true}
-        }],
-        {
-            title: "散布図",
-            subtitle: "",
-            xaxis: {
-                title: datasets.left.name
-            },
-            yaxis: {
-                title: datasets.right.name
-            },
-            mouse: {
-                track: true,
-                relative: true
-            }
-        }
-    );
-    $(".flotr-dummy-div").parent().hide();
+    var w = 860;
+    var h = 500;
+    var margin = 10;
+    var paddingTop = 10;
+    var paddingRight = 50;
+    var paddingBottom = 45;
+    var paddingLeft = 100;
+
+
+    var dataset = scatterData;
+
+    //Create SVG element
+    var svg = d3.select("#scatter-chart")
+        .append("svg")
+        .attr("width", w - margin * 2)
+        .attr("height", h - margin * 2);
+
+    var xScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, function (d) {
+            return d.x;
+        })])
+        .range([paddingLeft, w - 2 * margin - paddingRight])
+        .nice();
+
+    var yScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, function (d) {
+            return d.y;
+        })])
+        .range([h - 2 * margin - paddingBottom, paddingTop])
+        .nice();
+
+    // X軸の生成
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom");
+
+    // Y軸の生成
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left");
+
+    // X軸の表示
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (h - 2 * margin - paddingBottom) + ")")
+        .call(xAxis);
+
+    // Y軸の表示
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + paddingLeft + ",0)")
+        .call(yAxis);
+
+    svg.selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) {
+            return xScale(d.x);
+        })
+        .attr("cy", function (d) {
+            return yScale(d.y);
+        })
+        .attr("r", 5)
+        .attr("stroke", "deepskyblue")
+        .attr("stroke-width", "3px")
+        .attr("fill", "lavender")
+        .on("mouseover", function (d) {
+            var svgElement = d3.select(this);
+            svgElement.attr("stroke", "dodgerblue");
+
+            // ツールチップの位置の計算
+            var xPosition = parseFloat(svgElement.attr("cx")) + 30;
+            var yPosition = parseFloat(svgElement.attr("cy")) + 60;
+
+            // ツールチップの内容
+            var msg = d.municipality + "<br>x: " + d.x + "<br>y:" + d.y;
+
+            // ツールチップの位置と内容の指定
+            d3.select("#tooltip")
+                .style("left", xPosition + "px")
+                .style("top", yPosition + "px")
+                .select("#tooltip-text")
+                .html(msg);
+
+            // ツールチップの表示
+            d3.select("#tooltip").classed("hidden", false);
+        })
+        .on("mouseout", function () {
+            d3.select(this).attr("stroke", "deepskyblue");
+            // ツールチップの非表示
+            d3.select("#tooltip").classed("hidden", true);
+        });
+
+    // x軸タイトル
+    svg.append("text")
+        .attr("class", "x-axis-title")
+        .attr("transform", "translate(" + ((w + paddingLeft - paddingRight) / 2 - margin) + "," + (h - 2 * margin - 11) + ")")
+        .text(datasets.left.name)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "11px");
+
+    // y軸タイトル
+    svg.append("text")
+        .attr("class", "y-axis-title")
+        .attr("transform", "translate(" + (11 + margin) + ", " + ((paddingTop + h - paddingBottom) / 2) + ") rotate(270)")
+        //.attr("transform", "translate(" + 0 + "," + (h / 2 - margin) + ")")
+        .text(datasets.right.name)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "11px");
+
 }
 
+// 相関係数の計算
 function calcCorrelationCoefficient(scatterData) {
     'use strict';
 
@@ -232,18 +320,19 @@ function calcCorrelationCoefficient(scatterData) {
         i,
         length;
 
-    // それぞれの平均を求める
+    // それぞれの和を求める
     i = 0;
     length = scatterData.length;
     while (i < length) {
-        averageX += scatterData[i][0];
-        averageY += scatterData[i][1];
-        averageSquareX += scatterData[i][0] * scatterData[i][0];
-        averageSquareY += scatterData[i][1] * scatterData[i][1];
-        averageXY += scatterData[i][0] * scatterData[i][1];
+        averageX += scatterData[i].x;
+        averageY += scatterData[i].y;
+        averageSquareX += scatterData[i].x * scatterData[i].x;
+        averageSquareY += scatterData[i].y * scatterData[i].y;
+        averageXY += scatterData[i].x * scatterData[i].y;
         i += 1;
     }
 
+    // 和を個数で割って平均を求める
     averageX /= length;
     averageY /= length;
     averageSquareX /= length;
@@ -265,9 +354,7 @@ function showCorrelation() {
     correlationCoefficient = calcCorrelationCoefficient(scatterData);
 
     // 表示メッセージの生成
-    msg = '<p>x軸: ' + datasets.left.name + '<br>';
-    msg += 'y軸: ' + datasets.right.name + '<br>';
-    msg += '相関係数: ' + correlationCoefficient + '</p>';
+    msg = '<p>相関係数: ' + correlationCoefficient.toFixed(3) + '</p>';
     $("#correlation-coefficient").html(msg);
 
     // 散布図の描画
@@ -311,50 +398,46 @@ function initCorrelation() {
 
     // データセットを読んで一覧を表示
     $.getJSON("/datasets.json", function (jsonArray) {
+        var positions = ['left', 'right'];
+
+        // 反対側のデータセットを求める
+        var opposite = function (position) {
+            if (positions[0] === position) {
+                return positions[1];
+            } else if (positions[1] === position) {
+                return positions[0];
+            } else {
+                return null;
+            }
+        };
+
         // データセット選択エリアの設定
         jsonArray.forEach(function (json) {
-            $("#dataset-select-left").append('<option value="' + json.id + '">' + json.name + '</option>');
-            $("#dataset-select-right").append('<option value="' + json.id + '">' + json.name + '</option>');
+            positions.map(function (position) {
+                $("#dataset-select-" + position).append('<option value="' + json.id + '">' + json.name + '</option>');
+            });
         });
 
-        // データセット左のイベントハンドラ
-        $("#dataset-select-left").on('change', function () {
-            var id;
-            // 既存のデータセット左を削除
-            hideDataset('left');
-            // 「2つのデータを比較」ボタンを無効化
-            $("#display-correlation").prop("disabled", true);
-            // データセット右のオプションをすべて有効化
-            $("#dataset-select-right option").prop("disabled", false);
+        // データセットのイベントハンドラ
+        positions.map(function (position) {
+            $("#dataset-select-" + position).on('change', function () {
+                var id;
+                // 既存のデータセットを削除
+                hideDataset(position);
+                // 「2つのデータを比較」ボタンを無効化
+                $("#display-correlation").prop("disabled", true);
+                // データセット反対側のオプションをすべて有効化
+                $("#dataset-select-" + opposite(position) + " option").prop("disabled", false);
 
-            // データセット左に入っているデータのidを取得
-            id = $("[name=dataset-select-left]").val();
-            if (id !== "") {
-                // データセット左に入っているidと同じデータセット右のオプションを無効化
-                $("#dataset-select-right option[value=" + id + "]").prop("disabled", true);
-                // マップにデータセット左を表示
-                showDataset(id, 'left');
-            }
-        });
-
-        // データセット右のイベントハンドラ
-        $("#dataset-select-right").on('change', function () {
-            var id;
-            // 既存のデータセット右を削除
-            hideDataset('right');
-            // 「2つのデータを比較」ボタンを無効化
-            $("#display-correlation").prop("disabled", true);
-            // データセット左のオプションをすべて有効化
-            $("#dataset-select-left option").prop("disabled", false);
-
-            // データセット右に入っているデータのidを取得
-            id = $("[name=dataset-select-right]").val();
-            if (id !== "") {
-                // データセット右に入っているidと同じデータセット右のオプションを無効化
-                $("#dataset-select-left option[value=" + id + "]").prop("disabled", true);
-                // マップにデータセット右を表示
-                showDataset(id, 'right');
-            }
+                // データセットに入っているデータのidを取得
+                id = $("[name=dataset-select-" + position + "]").val();
+                if (id !== "") {
+                    // データセット左に入っているidと同じデータセット反対側のオプションを無効化
+                    $("#dataset-select-" + opposite(position) + " option[value=" + id + "]").prop("disabled", true);
+                    // マップにデータセットを表示
+                    showDataset(id, position);
+                }
+            });
         });
 
         // データセット比較モーダルの表示のイベントハンドラ
