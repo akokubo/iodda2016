@@ -19,6 +19,9 @@ $(document).ready(function () {
         // D3による円グラフの描画
         drawD3PieChart("#d3-pie-chart", dataset);
 
+        // d3pieによる円グラフの描画
+        drawD3PiePieChart("#d3pie-pie-chart", dataset);
+
         // D3によるGoogleマップへの棒グラフの描画
         drawD3GoogleMapsBarsChart("#d3-google-maps-bars-chart", dataset);
 
