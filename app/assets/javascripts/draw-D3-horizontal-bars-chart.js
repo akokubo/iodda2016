@@ -4,6 +4,8 @@
 function drawD3HorizonatlBarsChart(targetElement, dataset) {
     'use strict';
 
+    var data = dataset.data;
+
     // グラフ表示領域のサイズ
     var w = 960;
     var h = 600;
@@ -15,7 +17,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
     var labelWidth = fontSize * 6;
 
     // 最大値を求める
-    var valueMax = d3.max(dataset, function (d) {
+    var valueMax = d3.max(data, function (d) {
         return d.value;
     });
 
@@ -39,7 +41,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
 
     // y軸のスケール
     var yScale = d3.scale.ordinal()
-        .domain(d3.range(dataset.length))
+        .domain(d3.range(data.length))
         .rangeRoundBands([padding, h - padding], 0.05);
 
     // SVG要素を作る
@@ -51,7 +53,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
     // 棒グラフを表示する
     var drawBars = function () {
         svg.selectAll("rect")
-            .data(dataset)
+            .data(data)
             .enter()
             .append("rect")
             .attr("x", 0)
@@ -95,7 +97,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
     // 棒グラフの右に値を表示する
     var drawValues = function () {
         svg.selectAll(targetElement + " text.value")
-            .data(dataset)
+            .data(data)
             .enter()
             .append("text")
             .attr("class", "value")
@@ -114,7 +116,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
     // 棒グラフにラベルを追加する
     var drawLabels = function () {
         svg.selectAll(targetElement + " text.label")
-            .data(dataset)
+            .data(data)
             .enter()
             .append("text")
             .attr("class", "label")

@@ -14,7 +14,7 @@ $(document).ready(function () {
 
     $.getJSON(jsonPathname, function (dataset) {
         // D3による棒グラフの描画
-        drawD3HorizonatlBarsChart("#d3-horizontal-bars-chart", dataset.data);
+        drawD3HorizonatlBarsChart("#d3-horizontal-bars-chart", dataset);
 
         // D3による円グラフの描画
         drawD3PieChart("#d3-pie-chart", dataset);
@@ -30,7 +30,7 @@ $(document).ready(function () {
             drawD3GeoJSONChart("#d3-geojson-chart", dataset, geojson);
 
             // D3によるGoogleマップへのGeoJSONの描画
-            drawD3GoogleMapsGeoJSONChart("#d3-google-maps-geojson-chart", dataset.data, geojson);
+            drawD3GoogleMapsGeoJSONChart("#d3-google-maps-geojson-chart", dataset, geojson);
         });
 
         // Flotr2による棒グラフの描画

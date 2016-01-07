@@ -1,9 +1,11 @@
 /*jslint devel:true, browser:true */
 /*global $, d3, google */
 
-function drawD3GoogleMapsGeoJSONChart(targetElement, data, geojson) {
+function drawD3GoogleMapsGeoJSONChart(targetElement, dataset, geojson) {
     'use strict';
-    var map, max, styleFeature, dataSettlement, dataValue, i, j, jsonSettlement;
+    var map, max, styleFeature, data, dataSettlement, dataValue, i, j, jsonSettlement;
+
+    data = dataset.data;
 
     map = new google.maps.Map($(targetElement)[0], {
         zoom: 9,
