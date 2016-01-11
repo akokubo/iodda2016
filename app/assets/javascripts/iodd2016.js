@@ -111,7 +111,7 @@ function hideDataset(align) {
     }
 }
 
-function calcYScale(data) {
+function calcYScale(data, align) {
     'use strict';
 
     var min, max, yScale;
@@ -120,9 +120,12 @@ function calcYScale(data) {
         return d.value;
     });
 
+    $("#dataset-" + align + "-data-min").val(min);
+
     max = d3.max(data, function (d) {
         return d.value;
     });
+    $("#dataset-" + align + "-data-max").val(max);
 
     if (min > 0) {
         min = 0;
@@ -136,8 +139,52 @@ function calcYScale(data) {
         .domain([min, max])
         .range([0, maxBarHeight])
         .nice();
+    $("#dataset-" + align + "-domain-min").val(yScale.domain()[0]);
+    $("#dataset-" + align + "-domain-max").val(yScale.domain()[1]);
 
     return yScale;
+}
+
+function reCalcYScale(domain) {
+    'use strict';
+
+    var min, max, yScale;
+
+    min = domain[0];
+
+    max = domain[1];
+
+    yScale = d3.scale.linear()
+        .domain([min, max])
+        .range([0, maxBarHeight]);
+
+    return yScale;
+}
+
+// データセットを再表示
+function redrawDataset(dataset, align, domain) {
+    'use strict';
+
+    var marker, markers = [];
+
+    var data, yScale;
+
+    if (displayGoogleMap === true) {
+        removeMarkers(align);
+    }
+
+    data = dataset.data;
+
+    yScale = reCalcYScale(domain);
+
+    if (displayGoogleMap === true) {
+        data.forEach(function (datum) {
+            marker = createMarker(datum, yScale, align);
+            markers.push(marker);
+        });
+    }
+
+    datasets[align].markers = markers;
 }
 
 // データセットを表示
@@ -152,7 +199,7 @@ function showDataset(datasetId, align) {
 
         data = dataset.data;
 
-        yScale = calcYScale(data);
+        yScale = calcYScale(data, align);
 
         if (displayGoogleMap === true) {
             data.forEach(function (datum) {
@@ -400,14 +447,14 @@ function initCorrelation() {
 
     // データセットを読んで一覧を表示
     $.getJSON("/datasets.json", function (jsonArray) {
-        var positions = ['left', 'right'];
+        var aligns = ['left', 'right'];
 
         // 反対側のデータセットを求める
-        var opposite = function (position) {
-            if (positions[0] === position) {
-                return positions[1];
-            } else if (positions[1] === position) {
-                return positions[0];
+        var opposite = function (align) {
+            if (aligns[0] === align) {
+                return aligns[1];
+            } else if (aligns[1] === align) {
+                return aligns[0];
             } else {
                 return null;
             }
@@ -415,29 +462,51 @@ function initCorrelation() {
 
         // データセット選択エリアの設定
         jsonArray.forEach(function (json) {
-            positions.map(function (position) {
-                $("#dataset-select-" + position).append('<option value="' + json.id + '">' + json.name + '</option>');
+            aligns.map(function (align) {
+                $("#dataset-select-" + align).append('<option value="' + json.id + '">' + json.name + '</option>');
             });
         });
 
         // データセットのイベントハンドラ
-        positions.map(function (position) {
-            $("#dataset-select-" + position).on('change', function () {
+        aligns.map(function (align) {
+            $("#dataset-" + align + "-data-min").val(0);
+            $("#dataset-" + align + "-data-max").val(0);
+            $("#dataset-" + align + "-domain-min").val(0);
+            $("#dataset-" + align + "-domain-max").val(0);
+
+            $("#dataset-" + align + "-domain-min").on('change', function () {
+                var min, max;
+                min = $("#dataset-" + align + "-domain-min").val();
+                max = $("#dataset-" + align + "-domain-max").val();
+                if (min < max) {
+                    redrawDataset(datasets[align], align, [min, max]);
+                }
+            });
+            $("#dataset-" + align + "-domain-max").on('change', function () {
+                var min, max;
+                min = $("#dataset-" + align + "-domain-min").val();
+                max = $("#dataset-" + align + "-domain-max").val();
+                if (min < max) {
+                    redrawDataset(datasets[align], align, [min, max]);
+                }
+            });
+
+            $("#dataset-select-" + align).on('change', function () {
                 var id;
                 // 既存のデータセットを削除
-                hideDataset(position);
+                hideDataset(align);
                 // 「2つのデータを比較」ボタンを無効化
                 $("#display-correlation").prop("disabled", true);
                 // データセット反対側のオプションをすべて有効化
-                $("#dataset-select-" + opposite(position) + " option").prop("disabled", false);
+                $("#dataset-select-" + opposite(align) + " option").prop("disabled", false);
 
                 // データセットに入っているデータのidを取得
-                id = $("[name=dataset-select-" + position + "]").val();
+                id = $("[name=dataset-select-" + align + "]").val();
                 if (id !== "") {
                     // データセット左に入っているidと同じデータセット反対側のオプションを無効化
-                    $("#dataset-select-" + opposite(position) + " option[value=" + id + "]").prop("disabled", true);
+                    $("#dataset-select-" + opposite(align) + " option[value=" + id + "]").prop("disabled", true);
                     // マップにデータセットを表示
-                    showDataset(id, position);
+                    showDataset(id, align);
                 }
             });
         });

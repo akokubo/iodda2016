@@ -1,16 +1,80 @@
 <div id="description" class="col-md-4">
   <form>
-    <lable>データセット(左・赤)
-      <select class="form-control" id="dataset-select-left" name="dataset-select-left">
-        <option value="">選択してください</option>
-      </select>
-    </lable>
+    <fieldset class="form-group">
+      <div class="form-group">
+        <label for="dataset-select-left">データセット(左・赤)</label>
+        <select class="form-control" id="dataset-select-left" name="dataset-select-left">
+          <option value="">選択してください</option>
+        </select>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="left-heading">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" href="#left-collapse" aria-expanded="false" aria-controls="left-collapse">
+              左グラフの設定変更
+            </a>
+          </h4>
+        </div>
+        <div id="left-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="left-heading">
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="dataset-left-data-min">データの最小値</label>
+              <input type="number" class="form-control" id="dataset-left-data-min" name="dataset-left-min" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label for="dataset-left-data-max">データの最大値</label>
+              <input type="number" class="form-control" id="dataset-left-data-max" name="dataset-left-max" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label for="dataset-left-domain-min">グラフの最小値</label>
+              <input type="number" class="form-control" id="dataset-left-domain-min" name="dataset-left-domain-min" value="0">
+            </div>
+            <div class="form-group">
+              <label for="dataset-left-domain-max">グラフの最大値</label>
+              <input type="number" class="form-control" id="dataset-left-domain-max" name="dataset-left-domain-max" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
 
-    <lable>データセット(右・黄)
-      <select class="form-control" id="dataset-select-right" name="dataset-select-right">
-        <option value="">選択してください</option>
-      </select>
-    </lable>
+    <fieldset class="form-group">
+      <div class="form-group">
+        <label for="dataset-select-right">データセット(右・黄)</label>
+        <select class="form-control" id="dataset-select-right" name="dataset-select-right">
+          <option value="">選択してください</option>
+        </select>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="right-heading">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" href="#right-collapse" aria-expanded="false" aria-controls="right-collapse">
+              左グラフの設定変更
+            </a>
+          </h4>
+        </div>
+        <div id="right-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="right-heading">
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="dataset-right-data-min">データの最小値</label>
+              <input type="number" class="form-control" id="dataset-right-data-min" name="dataset-right-min" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label for="dataset-right-data-max">データの最大値</label>
+              <input type="number" class="form-control" id="dataset-right-data-max" name="dataset-right-max" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label for="dataset-right-domain-min">グラフの最小値</label>
+              <input type="number" class="form-control" id="dataset-right-domain-min" name="dataset-right-domain-min" value="0">
+            </div>
+            <div class="form-group">
+              <label for="dataset-right-domain-max">グラフの最大値</label>
+              <input type="number" class="form-control" id="dataset-right-domain-max" name="dataset-right-domain-max" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </form>
 
   <!-- Button trigger modal -->

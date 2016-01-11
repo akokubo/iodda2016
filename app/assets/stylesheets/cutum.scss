@@ -99,6 +99,13 @@ input {
   }
 }
 
+fieldset.form-group {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px !important;
+}
+
 svg {
   border: 1px solid black;
 }
