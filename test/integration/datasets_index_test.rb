@@ -11,7 +11,7 @@ class DatasetsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'tbody tr'
     Dataset.all.each do |dataset|
       assert_select 'td', dataset.name
-      assert_select 'a[href=?]', dataset_path(dataset), text: "詳細表示"
+      assert_select 'a[href=?]', dataset_path(dataset), text: "データの表示"
       assert_select 'a[href=?]', dataset_path(dataset), text: "削除"
     end
     assert_difference 'Dataset.count', -1 do
