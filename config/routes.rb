@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
-  get 'map' => 'static_pages#map'
+  get 'compare' => 'static_pages#compare'
 
   resources :municipalities, only: [:index]
   resources :datasets do

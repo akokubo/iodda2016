@@ -23,9 +23,9 @@ class StaticPagesControllerTest < ActionController::TestCase
     assert_select "title", "アプリについて | #{@base_title}"
   end
 
-  test "should get map" do
-    get :map
+  test "should get compare" do
+    get :compare
     assert_response :success
-    assert_select "title", "マップ表示 | #{@base_title}"
+    assert_select "title", "2つのデータを比較 | #{@base_title}"
   end
 end

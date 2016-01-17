@@ -1,4 +1,4 @@
-<% provide(:title, "マップ表示") %>
+<% provide(:title, "2つのデータを比較") %>
 <div class="page-header">
   <h1><%= yield(:title) %></h1>
 </div>
@@ -7,9 +7,8 @@
   <!-- マップ領域 -->
   <div id="map" class="col-md-8"></div>
   <!-- 説明領域 -->
-  <%= render 'map_description' %>
+  <%= render 'compare_description' %>
 </div>
 
-<script src="/assets/iodd2016.js"></script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
+<script src="/assets/compare.js"></script>
 <script src="/assets/d3.min.js"></script>
