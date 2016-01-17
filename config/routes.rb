@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get 'help' => 'static_pages#help'
   get 'map' => 'static_pages#map'
 
-  resources :municipalities
+  resources :municipalities, only: [:index]
   resources :datasets do
     member do
       get 'bars_chart_on_map'
