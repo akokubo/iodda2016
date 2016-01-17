@@ -7,8 +7,11 @@ Rails.application.routes.draw do
   resources :municipalities
   resources :datasets do
     member do
-      get 'visualize'
-      get 'd3_visualize'
+      get 'bars_chart_on_map'
+      get 'choropleth_chart'
+      get 'horizontal_bars_chart'
+      get 'pie_chart'
+      get 'd3pie_chart'
     end
   end
 

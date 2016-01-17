@@ -1,7 +1,9 @@
 /*jslint browser:true, devel:true */
 /*global $, d3 */
 
-function drawD3PieChart(targetElement, dataset) {
+var DrawD3PieChart = {};
+
+DrawD3PieChart.init = function (targetElement, chartElement, dataset) {
     'use strict';
 
     // グラフ表示領域のサイズ
@@ -36,7 +38,7 @@ function drawD3PieChart(targetElement, dataset) {
     var color = d3.scale.category10();
 
     //Create SVG element
-    var svg = d3.select(targetElement)
+    var svg = d3.select(chartElement)
         .append("svg")
         .attr("width", w)
         .attr("height", h);
@@ -139,4 +141,4 @@ function drawD3PieChart(targetElement, dataset) {
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
         .text("パーセンテージ");
-}
+};

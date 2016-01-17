@@ -1,13 +1,15 @@
 /*jslint devel:true, browser:true */
 /*global $, d3, google */
 
-function drawD3GoogleMapsGeoJSONChart(targetElement, dataset, geojson) {
+var DrawD3GoogleMapsGeoJSONChart = {};
+
+DrawD3GoogleMapsGeoJSONChart.init = function (targetElement, mapElement, dataset, geojson) {
     'use strict';
     var map, max, styleFeature, data, dataSettlement, dataValue, i, j, jsonSettlement;
 
     data = dataset.data;
 
-    map = new google.maps.Map($(targetElement)[0], {
+    map = new google.maps.Map($(mapElement)[0], {
         zoom: 9,
         center: {lat: 41.0121782, lng: 140.6787885}
     });
@@ -54,4 +56,4 @@ function drawD3GoogleMapsGeoJSONChart(targetElement, dataset, geojson) {
 
     map.data.addGeoJson(geojson);
     map.data.setStyle(styleFeature(max));
-}
+};

@@ -3,8 +3,19 @@
   <h1><%= yield(:title) %></h1>
 </div>
 
-<%= link_to '視覚化', visualize_dataset_path(@dataset), class: 'btn btn-primary' %>
+<h2>グラフで表示</h2>
+<%= link_to '地図上に棒グラフ', bars_chart_on_map_dataset_path(@dataset), class: 'btn btn-primary' %>
 
+<%= link_to 'コロプレス表示', choropleth_chart_dataset_path(@dataset), class: 'btn btn-primary' %>
+
+<%= link_to '棒グラフ', horizontal_bars_chart_dataset_path(@dataset), class: 'btn btn-primary' %>
+
+<%= link_to '円グラフ', pie_chart_dataset_path(@dataset), class: 'btn btn-primary' %>
+
+<%= link_to '円グラフ(d3pie)', d3pie_chart_dataset_path(@dataset), class: 'btn btn-primary' %>
+
+<hr>
+<h2>データ</h2>
 <table class="table table-striped table-bordered table-hover">
   <thead>
     <th><%= Datum.human_attribute_name(:municipality) %></th>

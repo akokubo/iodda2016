@@ -8,9 +8,44 @@ class DatasetsController < ApplicationController
     @data = @dataset.data
   end
 
-  def visualize
+  def bars_chart_on_map
     @dataset = Dataset.find(params[:id])
-    @data = @dataset.data
+  end
+
+  def choropleth_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def horizontal_bars_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def pie_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def d3pie_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def bars_chart_on_map
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def choropleth_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def horizontal_bars_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def pie_chart
+    @dataset = Dataset.find(params[:id])
+  end
+
+  def d3pie_chart
+    @dataset = Dataset.find(params[:id])
   end
 
   def new

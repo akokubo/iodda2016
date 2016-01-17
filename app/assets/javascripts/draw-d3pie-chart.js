@@ -1,7 +1,9 @@
 /*jslint browser:true, devel:true */
 /*global $, d3pie */
 
-function drawD3PiePieChart(targetElement, dataset) {
+var DrawD3PiePieChart = {};
+
+DrawD3PiePieChart.init = function (targetElement, chartElement, dataset) {
     'use strict';
 
     // グラフ表示領域のサイズ
@@ -139,5 +141,5 @@ function drawD3PiePieChart(targetElement, dataset) {
         }
     };
 
-    var pie = new d3pie(targetElement, options);
+    var pie = new d3pie(chartElement, options);
 }

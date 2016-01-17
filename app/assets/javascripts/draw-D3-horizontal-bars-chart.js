@@ -1,7 +1,9 @@
 /*jslint browser:true, devel:true */
 /*global $, d3 */
 
-function drawD3HorizonatlBarsChart(targetElement, dataset) {
+var DrawD3HorizontalBarsChart = {};
+
+DrawD3HorizontalBarsChart.init = function (targetElement, chartElement, dataset) {
     'use strict';
 
     var data = dataset.data;
@@ -45,7 +47,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
         .rangeRoundBands([padding, h - padding], 0.05);
 
     // SVG要素を作る
-    var svg = d3.select(targetElement)
+    var svg = d3.select(chartElement)
         .append("svg")
         .attr("width", w)
         .attr("height", h);
@@ -79,24 +81,24 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
             .attr("transform", "translate(" + (labelWidth - padding) + ", " + (h - padding * 2 + 2) + ")")
             .call(xAxis);
 
-        svg.selectAll(targetElement + " .axis path")
+        svg.selectAll(chartElement + " .axis path")
             .attr("fill", "none")
             .attr("stroke", "black")
             .attr("shape-rendering", "crispEdges");
 
-        svg.selectAll(targetElement + " .axis line")
+        svg.selectAll(chartElement + " .axis line")
             .attr("fill", "none")
             .attr("stroke", "black")
             .attr("shape-rendering", "crispEdges");
 
-        svg.selectAll(targetElement + " .axis text")
+        svg.selectAll(chartElement + " .axis text")
             .attr("font-family", "sans-serif")
             .attr("font-size", "11px");
     };
 
     // 棒グラフの右に値を表示する
     var drawValues = function () {
-        svg.selectAll(targetElement + " text.value")
+        svg.selectAll(chartElement + " text.value")
             .data(data)
             .enter()
             .append("text")
@@ -115,7 +117,7 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
 
     // 棒グラフにラベルを追加する
     var drawLabels = function () {
-        svg.selectAll(targetElement + " text.label")
+        svg.selectAll(chartElement + " text.label")
             .data(data)
             .enter()
             .append("text")
@@ -139,4 +141,4 @@ function drawD3HorizonatlBarsChart(targetElement, dataset) {
     drawScale();
     drawValues();
     drawLabels();
-}
+};

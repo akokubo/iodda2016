@@ -1,0 +1,87 @@
+<% provide(:title, @dataset.name) %>
+<div class="page-header">
+  <h1>円グラフ(d3pie): <%= yield(:title) %></h1>
+</div>
+<div id="d3-pie-chart">
+	<div id="chart" style="width:960px;height:600px;"></div>
+<!--
+	<div class="preferences">
+-->
+		<!-- Button trigger modal -->
+<!--
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#chartPreferences">
+		  グラフの書式設定
+		</button>
+-->
+		<!-- Modal -->
+<!--
+		<div class="modal fade" id="chartPreferences" tabindex="-1" role="dialog" aria-labelledby="graphPreferencesLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="graphPreferencesLabel">グラフの書式設定</h4>
+		      </div>
+		      <div class="modal-body">
+				<form class="form-inline">
+			  		<div class="form-group">
+					    <label for="data-min" class="control-label">データの最小値</label>
+						<input type="number" class="form-control data-min" id="data-min" name="data-min">
+					</div>
+			  		<div class="form-group">
+					    <label for="data-max" class="control-label">データの最大値</label>
+						<input type="number" class="form-control data-max" id="data-max" name="data-max">
+					</div>
+					<br>
+			  		<div class="form-group">
+					    <label for="domain-min" class="control-label">グラフの最小値</label>
+						<input type="number" class="form-control domain-min" id="domain-min" name="domain-min">
+					</div>
+			  		<div class="form-group">
+					    <label for="domain-max" class="control-label">グラフの最大値</label>
+						<input type="number" class="form-control domain-max" id="domain-max" name="domain-max">
+					</div>
+					<br>
+			  		<div class="form-group">
+					    <label for="bar-height-max" class="control-label">グラフの棒の長さの最大値</label>
+						<input type="number" class="form-control bar-height-max" id="bar-height-max" name="bar-height-max">
+					</div>
+			  		<div class="form-group">
+					    <label for="bar-color" class="control-label">グラフの棒の色</label>
+						<div class="input-group bar-color">
+						    <span class="input-group-addon"><i></i></span>
+							<input type="text" class="form-control" id="bar-color" name="bar-color" value="rgba(255, 0, 0, 0.8)">
+						</div>
+					</div>
+				</form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+		        <button type="button" class="btn btn-primary apply">適用</button>
+		      </div>
+		    </div>
+		  </div>
+	  </div>
+	</div>
+-->
+</div>
+
+<script src="/assets/d3.min.js"></script>
+<script src="/assets/d3pie.min.js"></script>
+<script src="/assets/bootstrap-colorpicker.min.js"></script>
+<script src="/assets/draw-d3pie-chart.js"></script>
+
+<script>
+$(document).ready(function () {
+    'use strict';
+
+    // 取得するJSONのパス名を求める
+    var pathname = location.pathname;
+    var lastIndex = pathname.lastIndexOf("/");
+    var jsonPathname = pathname.substring(0, lastIndex) + ".json";
+
+    $.getJSON(jsonPathname, function (dataset) {
+        DrawD3PiePieChart.init("#d3-pie-chart", "#chart", dataset);
+    });
+});
+</script>
