@@ -18,5 +18,4 @@ class DatasetsIndexTest < ActionDispatch::IntegrationTest
       delete dataset_path(@dataset)
     end
   end
-
 end

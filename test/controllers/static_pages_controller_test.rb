@@ -22,10 +22,4 @@ class StaticPagesControllerTest < ActionController::TestCase
     assert_response :success
     assert_select "title", "アプリについて | #{@base_title}"
   end
-
-  test "should get compare" do
-    get :compare
-    assert_response :success
-    assert_select "title", "2つのデータを比較 | #{@base_title}"
-  end
 end

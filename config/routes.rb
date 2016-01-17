@@ -2,10 +2,12 @@ Rails.application.routes.draw do
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
-  get 'compare' => 'static_pages#compare'
 
   resources :municipalities, only: [:index]
-  resources :datasets do
+  resources :datasets, except: [:update, :edit] do
+    collection do
+      get 'compare'
+    end
     member do
       get 'bars_chart_on_map'
       get 'choropleth_chart'

@@ -3,6 +3,9 @@ class DatasetsController < ApplicationController
     @datasets = Dataset.all
   end
 
+  def compare
+  end
+
   def show
     @dataset = Dataset.find(params[:id])
     @data = @dataset.data
