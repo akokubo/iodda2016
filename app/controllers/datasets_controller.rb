@@ -74,6 +74,6 @@ class DatasetsController < ApplicationController
 
   private
     def dataset_params
-      params.require(:dataset).permit(:name, :file)
+      params.require(:dataset).permit(:name, :author, :description, :file)
     end
 end

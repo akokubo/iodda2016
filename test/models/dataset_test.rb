@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DatasetTest < ActiveSupport::TestCase
   def setup
-    @dataset = Dataset.new(name: "1人当たり所得")
+    @dataset = Dataset.new(name: "1人当たり所得", author: "青森太郎", description: "青森県のオープンデータカタログサイトから取得したデータ")
   end
 
   test "should be valid" do
@@ -11,6 +11,11 @@ class DatasetTest < ActiveSupport::TestCase
 
   test "name should be preset" do
     @dataset.name = "     "
+    assert_not @dataset.valid?
+  end
+
+  test "author should be preset" do
+    @dataset.author = "     "
     assert_not @dataset.valid?
   end
 

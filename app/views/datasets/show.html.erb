@@ -3,6 +3,10 @@
   <h1><%= yield(:title) %></h1>
 </div>
 
+<p><strong><%= Dataset.human_attribute_name(:author) %></strong>: <%= @dataset.author %></p>
+<p><strong><%= Dataset.human_attribute_name(:description) %></strong>: <%= simple_format(@dataset.description) %></p>
+
+<hr>
 <h2>グラフで表示</h2>
 <%= link_to '地図上に棒グラフ', bars_chart_on_map_dataset_path(@dataset), class: 'btn btn-primary' %>
 

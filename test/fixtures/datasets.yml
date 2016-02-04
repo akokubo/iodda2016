@@ -2,9 +2,13 @@
 
 population:
   name: 総人口
+  author: 青森太郎
+  description: 青森県のオープンデータカタログサイトから取得したデータ
 
 work_force:
   name: 推計就業者数
+  author: あおもりはなこ
+  description: 日本国のオープンデータカタログサイトから取得したデータ
 
 <% 30.times do |n| %>
 dataset_<%= n%>:

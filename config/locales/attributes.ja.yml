@@ -10,7 +10,9 @@ ja:
         lat: '緯度'
         lng: '経度'
       dataset:
-        name: '名前'
+        author: '登録者'
+        description: '説明'
+        name: 'データセットの名前'
         file: 'CSVファイル'
       datum:
         dataset: 'データセット'
