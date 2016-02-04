@@ -4,17 +4,12 @@
 </div>
 <div id="d3-horizontal-bars-chart">
 	<div id="chart" style="width:960px;height:600px;"></div>
-<!--
 	<div class="preferences">
--->
 		<!-- Button trigger modal -->
-<!--
 		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#chartPreferences">
 		  グラフの書式設定
 		</button>
--->
 		<!-- Modal -->
-<!--
 		<div class="modal fade" id="chartPreferences" tabindex="-1" role="dialog" aria-labelledby="graphPreferencesLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
@@ -26,11 +21,11 @@
 				<form class="form-inline">
 			  		<div class="form-group">
 					    <label for="data-min" class="control-label">データの最小値</label>
-						<input type="number" class="form-control data-min" id="data-min" name="data-min">
+						<input type="number" class="form-control data-min" id="data-min" name="data-min" readonly>
 					</div>
 			  		<div class="form-group">
 					    <label for="data-max" class="control-label">データの最大値</label>
-						<input type="number" class="form-control data-max" id="data-max" name="data-max">
+						<input type="number" class="form-control data-max" id="data-max" name="data-max" readonly>
 					</div>
 					<br>
 			  		<div class="form-group">
@@ -42,10 +37,6 @@
 						<input type="number" class="form-control domain-max" id="domain-max" name="domain-max">
 					</div>
 					<br>
-			  		<div class="form-group">
-					    <label for="bar-width-max" class="control-label">グラフの棒の長さの最大値</label>
-						<input type="number" class="form-control bar-width-max" id="bar-width-max" name="bar-width-max">
-					</div>
 			  		<div class="form-group">
 					    <label for="bar-color" class="control-label">グラフの棒の色</label>
 						<input type="text" class="form-control bar-color" id="bar-color" name="bar-color">
@@ -59,7 +50,6 @@
 		  </div>
 		</div>
 	</div>
--->
 </div>
 
 <script src="/assets/d3.min.js"></script>
@@ -75,7 +65,7 @@ $(document).ready(function () {
     var jsonPathname = pathname.substring(0, lastIndex) + ".json";
 
     $.getJSON(jsonPathname, function (dataset) {
-        DrawD3HorizontalBarsChart.init("#d3-horizontal-bars-chart", "#chart", dataset);
+        D3HorizontalBarsChart.init("#d3-horizontal-bars-chart", "#chart", dataset);
     });
 });
 </script>
