@@ -1,0 +1,8 @@
+{
+  "name": "IODDA2016 App",
+  "description": "Municipalities Data Visualizations and Comparisons",
+  "repository": "https://github.com/akokubo/iodda2016",
+  "scripts": {
+  	"postdeploy": "bundle exec rake db:migrate db:seed"
+  }
+}

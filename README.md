@@ -18,6 +18,9 @@ Bootstrapでユーザーインタフェースを構築、D3.jsとFlotr2とGoogle
 ## 他の地域への拡張性
 青森県用のデータが入っていますが、対象とする市町村の全国地方公共体コード、名前、役場の緯度・経度、行政区画のGeoJSONデータを用意すれば(用意は簡単です)、他の地域でも使えます。
 
+## Herokuへデプロイ
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## License
 [MIT License](LICENSE)
 
