@@ -2,4 +2,67 @@
 <div class="page-header">
   <h1><%= yield(:title) %></h1>
 </div>
-<p>Find me in app/views/static_pages/about.html.erb</p>
+<p>2016年3月5日に開催予定の「International Open Data Day in AOMORI 2016」では、企画をオープンに募集する予定です。</p>
+<p>これは青森大学で用意する予定のワークショップ「市町村データを比べてみよう」のためのWebアプリです。</p>
+
+<hr>
+<h2>ワークショップ「市町村データを比べてみよう」(予定)</h2>
+<p>ワークショップでは、青森県のオープンデータを調べたり持ち寄ったりして、市町村レベルにセグメントされた数値データをExcelなどを用いてCSV形式で作ります。</p>
+<p>それをこのアプリにアップロードしてデータセットとして登録します。</p>
+<p>すると、自動的にグラフ(棒グラフ、円グラフ、地図の色分け、地図上に棒グラフとして表示)を生成することができます。</p>
+<p>また、2つのデータセットを比較して、散布図を生成したり、相関係数を計算することができます。</p>
+<p>「意外な組み合わせにこんな相関が！」をみんなで見つけます。</p>
+
+<hr>
+<h2>システム構成</h2>
+<p>Ruby on Railsでサーバーサイドを開発し、データベースに登録したデータをJSON形式で提供するAPIを用意しました。</p>
+<p>Bootstrapでユーザーインタフェースを構築、D3.jsとFlotr2とGoogle Maps APIを用いてデータを視覚化しています。</p>
+<p>運用はHerokuを使用する想定になっています。</p>
+
+<hr>
+<h2>他の地域への拡張性</h2>
+<p>青森県用のデータが入っています。</p>
+<p>対象とする市町村の全国地方公共体コード、名前、役場の緯度・経度、行政区画のGeoJSONデータを用意すれば(用意は簡単です)、他の地域でも使えます。</p>
+
+<hr>
+<h2>アプリで使用しているオープンデータ</h2>
+<table class="table table-bordered">
+  <tr>
+    <th>サンプルデータ</th>
+    <td><a href="http://www.pref.aomori.lg.jp/kensei/tokei/dataland.html">青森県統計データランド</a>
+    </td>
+  </tr>
+  <tr>
+    <th>市町村名とそのコード</th>
+    <td><a href="http://www.soumu.go.jp/denshijiti/code.html">総務省 全国地方公共団体コード</a>
+    </td>
+  </tr>
+  <tr>
+    <th>市町村の役場の緯度経度</th>
+    <td><a href="http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-P05.html">国土数値情報 市町村役場等及び公的集会施設データ</a>
+    </td>
+  </tr>
+  <tr>
+    <th>市町村の形状</th>
+    <td><a href="http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03.html">国土数値情報 行政区域データ</a>
+    </td>
+  </tr>
+</table>
+
+<hr>
+<h2>ソースコード</h2>
+<ul>
+  <li><a href="https://github.com/akokubo/iodda2016/">ソースコード</a></li>
+</ul>
+
+<hr>
+<h2>ライセンス</h2>
+<ul>
+  <li><a href="https://github.com/akokubo/iodda2016/blob/master/LICENSE">MIT License</a></li>
+</ul>
+
+<hr>
+<h2>作者</h2>
+<ul>
+  <li><a href="https://akokubo.github.io/">小久保 温</a></li>
+</ul>
