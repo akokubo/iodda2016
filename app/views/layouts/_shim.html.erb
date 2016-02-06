@@ -1,9 +1,9 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<link href="/assets/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<%= stylesheet_link_tag 'ie10-viewport-bug-workaround', 'data-turbolinks-track' => true %>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-<!--[if lt IE 9]><script src="/assets/ie8-responsive-file-warning.js"></script><![endif]-->
-<script src="/assets/ie-emulation-modes-warning.js"></script>
+<!--[if lt IE 9]><%= javascript_include_tag 'ie8-responsive-file-warning', 'data-turbolinks-track' => true %><![endif]-->
+<%= javascript_include_tag 'ie-emulation-modes-warning', 'data-turbolinks-track' => true %>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
