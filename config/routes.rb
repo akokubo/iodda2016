@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :datasets, except: [:update, :edit] do
     collection do
       get 'compare'
+      get 'how_to_create'
     end
     member do
       get 'bars_chart_on_map'

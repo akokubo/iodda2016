@@ -6,6 +6,9 @@ class DatasetsController < ApplicationController
   def compare
   end
 
+  def how_to_create
+  end
+
   def show
     @dataset = Dataset.find(params[:id])
     @data = @dataset.data

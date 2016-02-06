@@ -3,6 +3,9 @@
   <h1><%= yield(:title) %></h1>
 </div>
 
+<p><%= link_to "データセットの作り方", how_to_create_datasets_path %></p>
+
+<hr>
 <%= form_for @dataset, html: { class: "form-horizontal", role: "form" } do |f| %>
   <%= render 'shared/error_messages' %>
   <div class="form-group">
@@ -35,12 +38,3 @@
     </div>
   </div>
 <% end %>
-
-<hr>
-<h2>データセットの作り方</h2>
-<ol>
-  <li><a href="/data-template.xlsx">Microsoft Excelのテンプレート</a>をダウンロード</li>
-  <li>「値」の列に市町村ごとの数値を書き込む</li>
-  <li>[ファイル]→[名前をつけて保存]<br>「ファイル形式」を「CSV(コンマ区切り)(.csv)」、「名前」を「XXX.csv」(XXXは好きな名前)で「保存」<br>
-  「このブックには、選択したファイル形式で保存した場合に動作しない、または削除される可能性のある機能が含まれています。続行しますか？」と聞かれたら、「続行」</li>
-</ol>

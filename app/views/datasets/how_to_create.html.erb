@@ -1,0 +1,10 @@
+<% provide(:title, 'データセットの作り方') %>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
+</div>
+<ol>
+  <li><a href="/dataset-template.xlsx">Microsoft Excelのテンプレート</a>をダウンロード</li>
+  <li>「値」の列に市町村ごとの数値を書き込む</li>
+  <li>[ファイル]→[名前をつけて保存]<br>「ファイル形式」を「CSV(コンマ区切り)(.csv)」、「名前」を「XXX.csv」(XXXは好きな名前)で「保存」<br>
+  「このブックには、選択したファイル形式で保存した場合に動作しない、または削除される可能性のある機能が含まれています。続行しますか？」と聞かれたら、「続行」</li>
+</ol>
