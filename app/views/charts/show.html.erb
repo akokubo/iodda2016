@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @chart.name %>
+</p>
+
+<p>
+  <strong>Author:</strong>
+  <%= @chart.author %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @chart.description %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @chart.url %>
+</p>
+
+<p>
+  <strong>Options:</strong>
+  <%= @chart.options %>
+</p>
+
+<%= link_to 'Edit', edit_chart_path(@chart) %> |
+<%= link_to 'Back', charts_path %>
