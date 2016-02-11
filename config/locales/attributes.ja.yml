@@ -1,14 +1,16 @@
 ja:
   activerecord:
     models:
-      municipality: '市町村'
+      chart: 'グラフ'
       dataset: 'データセット'
+      municipality: '市町村'
     attributes:
-      municipality:
-        code: '全国地方公共団体コード'
-        name: '名前'
-        lat: '緯度'
-        lng: '経度'
+      chart:
+        author: '登録者'
+        description: '説明'
+        name: 'グラフの名前'
+        options: 'オプション'
+        url: 'URL'
       dataset:
         author: '登録者'
         description: '説明'
@@ -18,6 +20,11 @@ ja:
         dataset: 'データセット'
         municipality: '市町村'
         value: '値'
+      municipality:
+        code: '全国地方公共団体コード'
+        name: '名前'
+        lat: '緯度'
+        lng: '経度'
     successful:
       messages:
         created: "%{model}を保存しました。"
