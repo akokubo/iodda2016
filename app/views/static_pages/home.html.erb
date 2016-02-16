@@ -1,12 +1,11 @@
-<div class="page-header">
-  <h1><%= full_title(yield(:title)) %></h1>
+<div class="jumbotron">
+	<h1>International Open Data Day in AOMORI 2016</h1>
+	<p>International Open Data Dayは、オープンデータを知る、体験する、考える、作る世界同日イベントです！</p>
+	<p>オープンデータを楽しんでください！</p>
 </div>
-<p>International Open Data Day in AOMORI 2016へようこそ！</p>
-<p>International Open Data Dayは、オープンデータを知る、体験する、考える、作る世界同日イベントです！</p>
-<p>オープンデータを楽しんでください！</p>
-<hr>
-<p>このアプリは、Internatioanl Open Data Day in AOMORI 2016で、青森大学が用意した企画「市町村データ分析ワークショップ」で使用するためのものです。</p>
-<p>青森県のオープンデータを調べて、市町村ごとに記載された数値データを用意します。
-それをアプリに登録しましょう。
-すると、グラフとして表示したり、互いに比較できます。</p>
+<p>これは「青森県市町村データ分析ワークショップ」アプリです。</p>
+<p>青森県のオープンデータを探して、市町村ごとに記載された数値データを用意します。</p>
+<p>それを「データセット」としてアプリに登録しましょう。</p>
+<p>すると、グラフとして表示したり、互いに比較できます。</p>
 <p>データを表示したり、比較して意外な「！？」を探してみましょう。</p>
+<p><%= link_to "データセットの登録へ", new_dataset_path, class: "btn btn-primary" %></p>
