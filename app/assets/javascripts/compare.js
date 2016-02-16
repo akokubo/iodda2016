@@ -395,15 +395,27 @@ function calcCorrelationCoefficient(scatterData) {
 function showCorrelation() {
     'use strict';
 
-    var scatterData, correlationCoefficient, msg;
+    var scatterData, correlationCoefficient, correlationCoefficientAbs, msg;
 
     // データの整形
     scatterData = formatScatterData(datasets.left, datasets.right);
     // 相関係数の計算
     correlationCoefficient = calcCorrelationCoefficient(scatterData);
+    correlationCoefficientAbs = Math.abs(correlationCoefficient);
 
     // 表示メッセージの生成
-    msg = '<p>相関係数: ' + correlationCoefficient.toFixed(3) + '</p>';
+    msg = '<strong>相関係数</strong>: ' + correlationCoefficient.toFixed(3) + '　／　';
+
+    if (correlationCoefficientAbs > 0.7) {
+        msg += "強い相関があります";
+    } else if (correlationCoefficientAbs > 0.4) {
+        msg += "中程度の相関があります";
+    } else if (correlationCoefficientAbs > 0.2) {
+        msg += "弱い相関があります";
+    } else {
+        msg += "ほとんど相関がありません";
+    }
+
     $("#correlation-coefficient").html(msg);
 
     // 散布図の描画
