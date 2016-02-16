@@ -1,5 +1,43 @@
-<h1>New Chart</h1>
+<% provide(:title, 'グラフの登録') %>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
+</div>
 
-<%= render 'form' %>
-
-<%= link_to 'Back', charts_path %>
+<%= form_for @chart, html: { class: "form-horizontal", role: "form" } do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="form-group">
+    <%= f.label :name, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :name, class: "form-control", placeholder: "総人口(平成XX年)の棒グラフなど" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :author, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :author, class: "form-control", placeholder: "青森太郎など" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :description, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_area :description, class: "form-control", placeholder: "グラフの説明など" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :url, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :url, class: "form-control", placeholder: "グラフのURL" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :options, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_area :options, class: "form-control", placeholder: "グラフのオプション" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= f.submit "グラフを登録", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

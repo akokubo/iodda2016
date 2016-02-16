@@ -3,11 +3,11 @@
   <h1><%= yield(:title) %></h1>
 </div>
 
-<p><%= link_to "データセットの作り方", how_to_create_datasets_path %></p>
+<p><%= link_to "データセットの作り方", how_to_create_datasets_path, class: "btn btn-primary" %></p>
 
 <hr>
 <%= form_for @dataset, html: { class: "form-horizontal", role: "form" } do |f| %>
-  <%= render 'shared/error_messages' %>
+  <%= render 'shared/error_messages', object: f.object %>
   <div class="form-group">
     <%= f.label :name, class: "col-sm-2 control-label" %>
     <div class="col-sm-10">

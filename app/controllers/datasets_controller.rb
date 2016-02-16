@@ -16,42 +16,27 @@ class DatasetsController < ApplicationController
 
   def bars_chart_on_map
     @dataset = Dataset.find(params[:id])
+    @chart = Chart.new
   end
 
   def choropleth_chart
     @dataset = Dataset.find(params[:id])
+    @chart = Chart.new
   end
 
   def horizontal_bars_chart
     @dataset = Dataset.find(params[:id])
+    @chart = Chart.new
   end
 
   def pie_chart
     @dataset = Dataset.find(params[:id])
+    @chart = Chart.new
   end
 
   def d3pie_chart
     @dataset = Dataset.find(params[:id])
-  end
-
-  def bars_chart_on_map
-    @dataset = Dataset.find(params[:id])
-  end
-
-  def choropleth_chart
-    @dataset = Dataset.find(params[:id])
-  end
-
-  def horizontal_bars_chart
-    @dataset = Dataset.find(params[:id])
-  end
-
-  def pie_chart
-    @dataset = Dataset.find(params[:id])
-  end
-
-  def d3pie_chart
-    @dataset = Dataset.find(params[:id])
+    @chart = Chart.new
   end
 
   def new
